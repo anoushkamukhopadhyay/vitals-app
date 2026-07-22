@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import { useAppState, useAppDispatch } from '../../context/AppProvider';
-import { computeGpaScenarios } from '../../lib/gpaCalculator';
+import { LETTER_GRADES, type LetterGrade } from '../../context/types';
+import { computeProjectedGpa } from '../../lib/gpaCalculator';
 import { Card } from '../shared/Card/Card';
+import { Button } from '../shared/Button/Button';
 import typography from '../../styles/typography.module.css';
 
 const inputStyle: React.CSSProperties = {
@@ -12,15 +15,30 @@ const inputStyle: React.CSSProperties = {
   width: '100%',
 };
 
+const smallLabel: React.CSSProperties = { color: 'var(--color-text-muted)', fontSize: 10 };
+
 export function GpaCalculatorCard() {
   const { gpaInputs } = useAppState();
   const dispatch = useAppDispatch();
-  const scenarios = computeGpaScenarios(gpaInputs);
+  const projected = computeProjectedGpa(gpaInputs);
 
-  function update(field: keyof typeof gpaInputs, value: string) {
+  const [newCredits, setNewCredits] = useState('3');
+  const [newGrade, setNewGrade] = useState<LetterGrade>('A');
+  const [newIsScience, setNewIsScience] = useState(true);
+
+  function update(field: 'scienceGpa' | 'cumulativeGpa' | 'scienceCreditsCompleted' | 'cumulativeCreditsCompleted', value: string) {
     const num = Number(value);
     if (Number.isNaN(num)) return;
     dispatch({ type: 'SET_GPA_INPUTS', payload: { [field]: num } });
+  }
+
+  function addClass() {
+    const credits = Number(newCredits);
+    if (Number.isNaN(credits) || credits <= 0) return;
+    dispatch({ type: 'ADD_GPA_CLASS', payload: { credits, grade: newGrade, isScience: newIsScience } });
+    setNewCredits('3');
+    setNewGrade('A');
+    setNewIsScience(true);
   }
 
   return (
@@ -31,7 +49,7 @@ export function GpaCalculatorCard() {
 
       <div style={{ display: 'flex', gap: 10, marginTop: 12 }}>
         <label style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
-          <span className={typography.label} style={{ color: 'var(--color-text-muted)', fontSize: 10 }}>
+          <span className={typography.label} style={smallLabel}>
             SCIENCE GPA
           </span>
           <input
@@ -46,7 +64,7 @@ export function GpaCalculatorCard() {
           />
         </label>
         <label style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
-          <span className={typography.label} style={{ color: 'var(--color-text-muted)', fontSize: 10 }}>
+          <span className={typography.label} style={smallLabel}>
             CUMULATIVE GPA
           </span>
           <input
@@ -64,27 +82,27 @@ export function GpaCalculatorCard() {
 
       <div style={{ display: 'flex', gap: 10, marginTop: 10 }}>
         <label style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
-          <span className={typography.label} style={{ color: 'var(--color-text-muted)', fontSize: 10 }}>
-            CREDITS COMPLETED
+          <span className={typography.label} style={smallLabel}>
+            SCIENCE CREDITS SO FAR
           </span>
           <input
             type="number"
             min={0}
-            value={gpaInputs.creditsCompleted}
-            onChange={(e) => update('creditsCompleted', e.target.value)}
+            value={gpaInputs.scienceCreditsCompleted}
+            onChange={(e) => update('scienceCreditsCompleted', e.target.value)}
             className={typography.bodyRegular}
             style={inputStyle}
           />
         </label>
         <label style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
-          <span className={typography.label} style={{ color: 'var(--color-text-muted)', fontSize: 10 }}>
-            CREDITS REMAINING
+          <span className={typography.label} style={smallLabel}>
+            CUMULATIVE CREDITS SO FAR
           </span>
           <input
             type="number"
             min={0}
-            value={gpaInputs.creditsRemaining}
-            onChange={(e) => update('creditsRemaining', e.target.value)}
+            value={gpaInputs.cumulativeCreditsCompleted}
+            onChange={(e) => update('cumulativeCreditsCompleted', e.target.value)}
             className={typography.bodyRegular}
             style={inputStyle}
           />
@@ -92,22 +110,87 @@ export function GpaCalculatorCard() {
       </div>
 
       <p className={typography.bodySmall} style={{ color: 'var(--color-base-dark)', marginTop: 16 }}>
-        If your remaining credits average…
+        This semester's classes
       </p>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginTop: 8 }}>
-        {scenarios.map((s) => (
-          <div
-            key={s.label}
-            style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}
+
+      {gpaInputs.classes.length > 0 && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginTop: 8 }}>
+          {gpaInputs.classes.map((c) => (
+            <div key={c.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+              <span className={typography.bodySmall} style={{ color: 'var(--color-base-dark)' }}>
+                {c.credits} cr · {c.grade}
+                {c.isScience ? ' · science' : ''}
+              </span>
+              <button
+                type="button"
+                onClick={() => dispatch({ type: 'REMOVE_GPA_CLASS', payload: { id: c.id } })}
+                className={typography.bodySmall}
+                style={{ background: 'none', border: 'none', color: 'var(--color-accent)', padding: 0 }}
+              >
+                Remove
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div style={{ display: 'flex', gap: 8, marginTop: 12, alignItems: 'flex-end', flexWrap: 'wrap' }}>
+        <label style={{ display: 'flex', flexDirection: 'column', gap: 4, width: 64 }}>
+          <span className={typography.label} style={smallLabel}>
+            CREDITS
+          </span>
+          <input
+            type="number"
+            min={1}
+            value={newCredits}
+            onChange={(e) => setNewCredits(e.target.value)}
+            className={typography.bodyRegular}
+            style={inputStyle}
+          />
+        </label>
+        <label style={{ display: 'flex', flexDirection: 'column', gap: 4, width: 72 }}>
+          <span className={typography.label} style={smallLabel}>
+            GRADE
+          </span>
+          <select
+            value={newGrade}
+            onChange={(e) => setNewGrade(e.target.value as LetterGrade)}
+            className={typography.bodyRegular}
+            style={inputStyle}
           >
-            <span className={typography.bodySmall} style={{ color: 'var(--color-text-muted)' }}>
-              {s.label}
-            </span>
-            <span className={typography.bodySmall} style={{ color: 'var(--color-base-dark)' }}>
-              Sci {s.projectedScience.toFixed(2)} · Cum {s.projectedCumulative.toFixed(2)}
-            </span>
-          </div>
-        ))}
+            {LETTER_GRADES.map((g) => (
+              <option key={g} value={g}>
+                {g}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label style={{ display: 'flex', alignItems: 'center', gap: 6, paddingBottom: 10 }}>
+          <input type="checkbox" checked={newIsScience} onChange={(e) => setNewIsScience(e.target.checked)} />
+          <span className={typography.bodySmall} style={{ color: 'var(--color-text-muted)' }}>
+            Science
+          </span>
+        </label>
+        <Button variant="secondary" onClick={addClass} style={{ width: 'auto', padding: '10px 16px' }}>
+          + Add class
+        </Button>
+      </div>
+
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          marginTop: 16,
+          paddingTop: 12,
+          borderTop: '1px solid var(--color-text-muted-20)',
+        }}
+      >
+        <span className={typography.bodySmall} style={{ color: 'var(--color-text-muted)' }}>
+          Projected end of semester
+        </span>
+        <span className={typography.bodyRegular} style={{ color: 'var(--color-base-dark)' }}>
+          Sci {projected.projectedScience.toFixed(2)} · Cum {projected.projectedCumulative.toFixed(2)}
+        </span>
       </div>
     </Card>
   );

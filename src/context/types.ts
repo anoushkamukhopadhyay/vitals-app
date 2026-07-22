@@ -52,11 +52,37 @@ export interface ApplicationState {
   schoolStages: Record<string, ApplicationStage>; // schoolId -> current stage
 }
 
+export type LetterGrade = 'A' | 'A-' | 'B+' | 'B' | 'B-' | 'C+' | 'C' | 'C-' | 'D+' | 'D' | 'F';
+
+export const GRADE_POINTS: Record<LetterGrade, number> = {
+  A: 4.0,
+  'A-': 3.7,
+  'B+': 3.3,
+  B: 3.0,
+  'B-': 2.7,
+  'C+': 2.3,
+  C: 2.0,
+  'C-': 1.7,
+  'D+': 1.3,
+  D: 1.0,
+  F: 0.0,
+};
+
+export const LETTER_GRADES: LetterGrade[] = Object.keys(GRADE_POINTS) as LetterGrade[];
+
+export interface GpaClass {
+  id: string;
+  credits: number;
+  grade: LetterGrade;
+  isScience: boolean;
+}
+
 export interface GpaInputs {
   scienceGpa: number;
   cumulativeGpa: number;
-  creditsCompleted: number;
-  creditsRemaining: number;
+  scienceCreditsCompleted: number;
+  cumulativeCreditsCompleted: number;
+  classes: GpaClass[];
 }
 
 export interface AppState {
@@ -79,4 +105,6 @@ export type Action =
   | { type: 'ADD_INTERVIEW_INVITE' }
   | { type: 'LOG_MOCK_INTERVIEW' }
   | { type: 'ADVANCE_SCHOOL_STAGE'; payload: { schoolId: string } }
-  | { type: 'SET_GPA_INPUTS'; payload: Partial<GpaInputs> };
+  | { type: 'SET_GPA_INPUTS'; payload: Partial<Omit<GpaInputs, 'classes'>> }
+  | { type: 'ADD_GPA_CLASS'; payload: { credits: number; grade: LetterGrade; isScience: boolean } }
+  | { type: 'REMOVE_GPA_CLASS'; payload: { id: string } };

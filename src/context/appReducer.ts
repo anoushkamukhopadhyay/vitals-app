@@ -17,8 +17,9 @@ export const initialState: AppState = {
   gpaInputs: {
     scienceGpa: 3.5,
     cumulativeGpa: 3.5,
-    creditsCompleted: 90,
-    creditsRemaining: 30,
+    scienceCreditsCompleted: 45,
+    cumulativeCreditsCompleted: 90,
+    classes: [],
   },
 };
 
@@ -88,6 +89,26 @@ export function appReducer(state: AppState, action: Action): AppState {
       return {
         ...state,
         gpaInputs: { ...state.gpaInputs, ...action.payload },
+      };
+    case 'ADD_GPA_CLASS': {
+      const newClass = {
+        id: crypto.randomUUID(),
+        credits: action.payload.credits,
+        grade: action.payload.grade,
+        isScience: action.payload.isScience,
+      };
+      return {
+        ...state,
+        gpaInputs: { ...state.gpaInputs, classes: [...state.gpaInputs.classes, newClass] },
+      };
+    }
+    case 'REMOVE_GPA_CLASS':
+      return {
+        ...state,
+        gpaInputs: {
+          ...state.gpaInputs,
+          classes: state.gpaInputs.classes.filter((c) => c.id !== action.payload.id),
+        },
       };
     default:
       return state;

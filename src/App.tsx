@@ -6,6 +6,9 @@ import { DashboardPage } from './pages/DashboardPage';
 import { LogEntryPage } from './pages/LogEntryPage';
 import { SchoolsPage } from './pages/SchoolsPage';
 import { RoadmapPage } from './pages/RoadmapPage';
+import { ResourcesPage } from './pages/ResourcesPage';
+import { PathPage } from './pages/PathPage';
+import { SchoolAssistantPage } from './pages/SchoolAssistantPage';
 
 function AppRoutes() {
   return (
@@ -41,6 +44,30 @@ function AppRoutes() {
         element={
           <RequireOnboarding>
             <RoadmapPage />
+          </RequireOnboarding>
+        }
+      />
+      <Route
+        path="/resources/:categoryId"
+        element={
+          <RequireOnboarding>
+            <ResourcesPage />
+          </RequireOnboarding>
+        }
+      />
+      <Route
+        path="/path"
+        element={
+          <RequireOnboarding>
+            <PathPage />
+          </RequireOnboarding>
+        }
+      />
+      <Route
+        path="/assistant/:schoolId"
+        element={
+          <RequireOnboarding>
+            <SchoolAssistantPage />
           </RequireOnboarding>
         }
       />

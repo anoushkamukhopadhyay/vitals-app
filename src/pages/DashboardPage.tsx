@@ -6,6 +6,7 @@ import { PageShell } from '../components/layout/PageShell/PageShell';
 import { Card } from '../components/shared/Card/Card';
 import { CategoryBadge } from '../components/shared/CategoryBadge/CategoryBadge';
 import { BalanceMeters } from '../components/shared/BalanceMeters/BalanceMeters';
+import { GpaCalculatorCard } from '../components/dashboard/GpaCalculatorCard';
 import typography from '../styles/typography.module.css';
 
 export function DashboardPage() {
@@ -61,6 +62,22 @@ export function DashboardPage() {
           <BalanceMeters stats={stats} />
         </div>
       </div>
+
+      <GpaCalculatorCard />
+
+      <Card>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
+          <div>
+            <p className={typography.bodyRegular}>Application tracker</p>
+            <p className={typography.bodySmall} style={{ color: 'var(--color-text-muted)' }}>
+              Personal statement, secondaries, interviews
+            </p>
+          </div>
+          <Link to="/path" className={typography.bodySmall} style={{ color: 'var(--color-base-dark)' }}>
+            Open →
+          </Link>
+        </div>
+      </Card>
     </PageShell>
   );
 }

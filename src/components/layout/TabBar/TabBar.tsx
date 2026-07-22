@@ -6,6 +6,7 @@ const TABS = [
   { to: '/dashboard', label: 'Dashboard' },
   { to: '/log', label: 'Log' },
   { to: '/schools', label: 'Schools' },
+  { to: '/path', label: 'Path' },
   { to: '/roadmap', label: 'Roadmap' },
 ];
 

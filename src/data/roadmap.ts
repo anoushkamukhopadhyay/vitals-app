@@ -31,14 +31,15 @@ export const ROADMAP: RoadmapYear[] = [
     focus: {
       research: 'Aim for a poster, presentation, or co-authorship.',
       clinicalShadowing: 'Log substantial clinical hours; consider an EMT/CNA/scribe role.',
-      coursework: 'Begin MCAT preparation alongside upper-level coursework.',
+      mcat: 'Take a full-length diagnostic and start a structured study plan.',
     },
   },
   {
     year: 'Senior',
     title: 'Year 4 — Apply',
     focus: {
-      coursework: 'Finalize MCAT score and cumulative GPA.',
+      mcat: 'Sit for the MCAT with enough buffer to retake if needed.',
+      coursework: 'Finalize your cumulative and science GPA.',
       service: 'Round out your service record before submitting primaries.',
       leadership: 'Highlight sustained leadership impact in your application narrative.',
     },
@@ -49,6 +50,7 @@ export const ROADMAP: RoadmapYear[] = [
     focus: {
       research: 'Use flexible time for a substantial research or clinical research role.',
       clinicalShadowing: 'Take on paid clinical work (scribe, EMT, CNA) for depth and income.',
+      mcat: 'Use extra time to meaningfully improve your MCAT score if retaking.',
       coursework: 'Address any GPA trends with post-bacc coursework if needed.',
     },
   },

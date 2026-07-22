@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { CATEGORY_META } from '../../../data/categories';
 import type { CategoryStats } from '../../../lib/categoryStats';
 import typography from '../../../styles/typography.module.css';
@@ -23,9 +24,18 @@ export function BalanceMeters({ stats }: BalanceMetersProps) {
           <div className={styles.row} key={s.category}>
             <div className={styles.rowHeader}>
               <span className={`${typography.bodyRegular} ${styles.label}`}>{meta.label}</span>
-              <span className={`${typography.bodySmall} ${styles.value}`}>
-                {Math.round(s.totalHours)} / {meta.goalHours} hrs
-              </span>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+                <span className={`${typography.bodySmall} ${styles.value}`}>
+                  {Math.round(s.totalHours)} / {meta.goalHours} hrs
+                </span>
+                <Link
+                  to={`/resources/${s.category}`}
+                  className={typography.bodySmall}
+                  style={{ color: 'var(--color-base-dark)', whiteSpace: 'nowrap' }}
+                >
+                  Need ideas? →
+                </Link>
+              </div>
             </div>
             <div
               className={styles.track}

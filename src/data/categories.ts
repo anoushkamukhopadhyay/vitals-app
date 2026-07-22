@@ -14,6 +14,7 @@ export const CATEGORY_ORDER: CategoryId[] = [
   'clinicalShadowing',
   'service',
   'coursework',
+  'mcat',
   'leadership',
 ];
 
@@ -44,7 +45,14 @@ export const CATEGORY_META: Record<CategoryId, CategoryMeta> = {
     label: 'Coursework',
     abbrev: 'CW',
     goalHours: 150,
-    description: 'Rigorous coursework, self-study, and MCAT preparation time.',
+    description: 'Rigorous coursework and self-study.',
+  },
+  mcat: {
+    id: 'mcat',
+    label: 'MCAT Prep',
+    abbrev: 'MC',
+    goalHours: 300,
+    description: 'Dedicated MCAT studying, practice tests, and review.',
   },
   leadership: {
     id: 'leadership',

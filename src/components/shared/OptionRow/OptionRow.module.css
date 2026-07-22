@@ -1,0 +1,37 @@
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  width: 100%;
+  padding: var(--space-16);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-text-muted);
+  background: transparent;
+  text-align: left;
+}
+
+.selected {
+  background: var(--color-base-dark);
+  border-color: var(--color-base-dark);
+}
+
+.dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  border: 1.5px solid var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+.dotSelected {
+  border-color: var(--color-surface-bg);
+  background: var(--color-surface-bg);
+}
+
+.label {
+  color: var(--color-base-dark);
+}
+
+.labelSelected {
+  color: var(--color-surface-bg);
+}
